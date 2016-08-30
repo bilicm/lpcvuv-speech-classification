@@ -1,3 +1,5 @@
+#Not to be used directly, only call getData function via python
+
 from scipy.io import wavfile
 import pysptk as sptk
 from numpy import float64
@@ -8,7 +10,7 @@ unvoiced = ['c', 'cc', 'C', 'f', 'h', 'p', 's', 'S', 't', 'k']
 def shortTermEnergy(sample):
 	return float64(sum( [ abs(x)**2 for x in sample ] ) / len(sample))
 
-def getData(filename):
+def getData(filename, lpc_o):
 	c = []
 	d = []
 	
@@ -26,7 +28,7 @@ def getData(filename):
 		fr = float64(wavdata[sta:end])
 		fr = fr * sptk.blackman(len(fr))
 		
-		data.extend(sptk.lpc(fr))
+		data.extend(sptk.lpc(fr, order = int(lpc_o)))
 		data.append(shortTermEnergy(fr))
 		
 		if cls in voiced:
